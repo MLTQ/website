@@ -2,7 +2,7 @@
    Edit this file for anything that isn't a project or a post. */
 
 export default {
-  name: 'XENOZOA',
+  name: 'MLTQ Archive',
   tagline: 'PARALLEL SYSTEMS / FIELD LOG',
   about:
     'A holding pen for systems grown in parallel. Nothing here is finished; ' +
