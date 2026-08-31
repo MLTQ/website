@@ -261,33 +261,55 @@ Images and video work the same way as on project pages — see above.
 
 ## Deploying
 
-GitHub Pages, via `.github/workflows/deploy.yml` on every push to `main`.
+Live at **https://azoa.online**. Every push to `main` rebuilds and redeploys
+via `.github/workflows/deploy.yml`; it takes about 30 seconds.
 
-One-time setup: on github.com, **Settings → Pages → Build and deployment →
-Source: GitHub Actions**. Nothing else. The workflow runs `node build.js` and
-publishes `dist/`.
+The repo is `MLTQ/MLTQ.github.io` — GitHub's *user site* name, so it also
+answers on `mltq.github.io`, which 301s to `azoa.online` because a custom
+domain is set. One site, two URLs, one canonical.
+
+Push over SSH. The OAuth token `gh` holds lacks the `workflow` scope, so an
+HTTPS push refuses to touch `.github/workflows/`. `gh auth refresh -s workflow`
+would fix that if you ever want HTTPS remotes back.
 
 ### The domain
 
-Set it in one place — `domain` in `content/site.js`:
+It lives in exactly one place — `domain` in `content/site.js`:
 
 ```js
-domain: 'xenozoa.systems',   // bare host, no protocol, no trailing slash
+domain: 'azoa.online',   // bare host, no protocol, no trailing slash
 ```
 
-That value drives `dist/CNAME`, the absolute URLs in `sitemap.xml` and
-`feed.xml`, the `canonical` and `og:url` tags, and the `Sitemap:` line in
-`robots.txt`. While it is `null` the site still builds and works — those four
-files are simply skipped, and the build says so.
+That drives `dist/CNAME`, the absolute URLs in `sitemap.xml` and `feed.xml`,
+the `canonical` and `og:url` tags, and the `Sitemap:` line in `robots.txt`.
+Set it to `null` and the site still builds — those four files are just skipped,
+and the build says so.
 
-After setting it and pushing, point DNS at GitHub Pages:
+DNS lives at Hover (`ns1/ns2.hover.com`):
 
-- **Apex** (`example.com`) — four `A` records to `185.199.108.153`,
-  `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-- **Subdomain** (`www.` or `log.`) — one `CNAME` to `MLTQ.github.io`
+| Type | Host | Value |
+|---|---|---|
+| A | @ | 185.199.108.153, .109.153, .110.153, .111.153 |
+| AAAA | @ | 2606:50c0:8000::153, 8001::153, 8002::153, 8003::153 |
+| CNAME | www | MLTQ.github.io |
 
-Then tick **Enforce HTTPS** under Settings → Pages once the certificate is
-issued.
+### Two things that will waste an hour if you forget them
+
+**The `CNAME` file in the artifact is not enough.** With the Actions-based
+Pages source, GitHub does *not* read `CNAME` out of the uploaded artifact —
+that only happens for legacy branch deploys. The custom domain has to be set on
+the repo itself, in Settings -> Pages or:
+
+```bash
+gh api -X PUT repos/MLTQ/MLTQ.github.io/pages -f cname=azoa.online
+```
+
+**If the certificate never issues, re-add the domain.** Setting the custom
+domain before DNS points at GitHub makes the first validation fail, and GitHub
+does not reliably retry. Once `dig +short A azoa.online` returns the four
+GitHub addresses, clear the domain and set it again — that re-queues issuance,
+and the certificate lands a few minutes later. `https_enforced` cannot be
+turned on until the certificate exists.
 
 ## Notes
 
