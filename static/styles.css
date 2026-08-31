@@ -1,0 +1,227 @@
+/* XENOZOA — shared styles.
+   Palette: off-white #ecedec, ink #141414, periwinkle #8f93d9,
+   bands: gray #c7c9c9 / lilac #9297d8 / green #cfe9cd.
+   Type: Michroma (display), Space Mono (body).
+   Muted greys are set at >=4.5:1 against the off-white ground, since the
+   small caption sizes here are well under the large-text threshold. */
+
+@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root{
+  --bg:#ecedec; --ink:#141414;
+  --peri:#8f93d9; --peri-dk:#575cae;
+  --gray:#c7c9c9; --lilac:#9297d8; --green:#cfe9cd;
+  --hair:#d4d5d4; --mut:#5c5c5c; --faint:#6b6c6d;
+  --pad:56px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Space Mono',monospace}
+a{color:var(--peri-dk);text-decoration:none}
+a:hover{color:var(--ink)}
+a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+h1,h2,h3{font-weight:400}
+img{max-width:100%;height:auto;display:block}
+.mh{font-family:'Michroma',sans-serif}
+.wrap{max-width:1180px;margin:0 auto}
+.pad{padding:0 var(--pad)}
+.skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:var(--bg);
+  font-size:11px;letter-spacing:.14em;padding:10px 14px;z-index:9}
+.skip:focus{left:0;color:var(--bg)}
+
+/* ------------------------------------------------------------- index header */
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;
+  padding:48px var(--pad) 40px;gap:32px;flex-wrap:wrap}
+.hdr h1{font-family:'Michroma',sans-serif;font-size:34px;margin:0}
+.hdr .sub{font-family:'Michroma',sans-serif;font-size:11px;letter-spacing:.26em;margin:8px 0 0}
+.hdr .about{font-size:11.5px;line-height:1.75;color:#4a4a4a;margin:26px 0 0;max-width:380px}
+
+/* text nav — stands in for the DAG on narrow screens, and is the only nav on
+   the pages that don't carry one */
+.gnav{display:flex;flex-wrap:wrap;gap:6px 18px;padding:26px var(--pad) 6px;
+  font-size:9.5px;letter-spacing:.2em}
+.hdr .gnav{padding-left:0;padding-right:0;display:none}
+
+/* --------------------------------------------------------------- DAG nav */
+.dag{position:relative;flex:none}
+.dag svg{position:absolute;left:0;top:0}
+.dag .dag-root{position:absolute;left:50%;top:16px;transform:translate(-50%,-50%);
+  background:var(--ink);color:var(--bg);font-family:'Michroma',sans-serif;
+  font-size:8px;letter-spacing:.14em;padding:4px 8px;white-space:nowrap}
+.dag a{position:absolute;transform:translate(-50%,-5px);display:flex;
+  flex-direction:column;align-items:center;gap:3px;white-space:nowrap}
+.dag a:hover{opacity:.6}
+.dag .cat-dot{width:10px;height:10px;background:var(--ink)}
+.dag .cat-lbl{font-size:7.5px;letter-spacing:.14em;color:var(--ink)}
+.dag .prj-dot{background:var(--peri);border-radius:50%}
+.dag .prj-lbl{font-size:7px;letter-spacing:.12em;color:var(--peri-dk)}
+.dag .legend{position:absolute;right:0;bottom:-10px;font-size:8px;
+  letter-spacing:.16em;color:var(--faint)}
+
+/* ------------------------------------------------------------ category bands */
+.band{padding:12px var(--pad);display:flex;justify-content:space-between;
+  align-items:baseline;gap:16px}
+.band h2{font-family:'Michroma',sans-serif;font-size:12px;letter-spacing:.16em;
+  margin:0;color:var(--ink)}
+.band .count{font-size:9.5px;letter-spacing:.18em;text-align:right}
+.band-gray{background:var(--gray)}  .band-gray .count{color:#3d3d3d}
+.band-lilac{background:var(--lilac)}.band-lilac .count{color:#26284a}
+.band-green{background:var(--green)}.band-green .count{color:#2e402e}
+
+/* --------------------------------------------------------- featured project */
+.row{display:grid;grid-template-columns:110px 1fr 240px;gap:0 32px;
+  padding:28px var(--pad);border-bottom:1px solid var(--hair);align-items:start}
+.g{position:relative}
+.g div{position:absolute;background:var(--peri)}
+.idlink{display:block;color:inherit}
+.idlink:hover .pname{color:var(--peri-dk)}
+.pname{font-family:'Michroma',sans-serif;font-size:12px;margin:10px 0 0;color:var(--ink)}
+.pstatus{font-size:9.5px;letter-spacing:.2em;color:var(--peri-dk);margin:4px 0 0}
+.pstatus.dim{color:var(--faint)}
+.pdesc{font-size:12px;line-height:1.7;color:#333;margin:0}
+.plog{margin-top:12px;display:flex;flex-direction:column;gap:4px;
+  font-size:11px;line-height:1.6;color:var(--mut)}
+.plog b{color:var(--ink);font-weight:400}
+
+/* ---------------------------------------------------------- compact project */
+.crow{display:grid;grid-template-columns:170px 1fr 110px;gap:0 32px;
+  padding:14px var(--pad);border-bottom:1px solid var(--hair);align-items:baseline}
+.crow .n{font-family:'Michroma',sans-serif;font-size:10.5px;color:var(--ink);margin:0}
+.crow .n a{color:inherit}
+.crow .n a:hover{color:var(--peri-dk)}
+.crow .d{font-size:11px;line-height:1.6;color:var(--mut)}
+.crow .s{font-size:9px;letter-spacing:.18em;color:var(--faint);text-align:right}
+.crow.bridges .d{color:var(--peri-dk)}
+
+/* ------------------------------------------------------------ commit field */
+.hm{display:grid;grid-template-rows:repeat(7,7px);grid-auto-flow:column;
+  grid-auto-columns:7px;gap:2px;
+  /* the 40-week field on project pages is wider than a phone: let it scroll
+     inside its own box rather than pushing the page sideways */
+  max-width:100%;overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
+.hm-lg{grid-template-rows:repeat(7,9px);grid-auto-columns:9px;gap:2.5px}
+.hm div{border-radius:1.5px}
+.hmcap{font-size:9px;letter-spacing:.14em;color:var(--faint);margin:8px 0 0}
+
+/* ------------------------------------------------------------ project page */
+.crumb{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  padding:30px var(--pad) 0;font-size:10px;letter-spacing:.2em}
+.crumb span{font-size:9.5px;color:var(--peri-dk)}
+.phdr{display:flex;align-items:flex-start;gap:44px;padding:36px var(--pad) 32px}
+.phdr h1{font-size:34px;margin:0;line-height:1.25}
+.phdr .g{flex:none}
+.lede{font-size:12.5px;line-height:1.75;color:#3a3a3a;margin:14px 0 0;max-width:600px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:32px var(--pad) 0}
+.stat{background:var(--gray);padding:14px 16px}
+.stat .v{font-family:'Michroma',sans-serif;font-size:15px}
+.stat .k{font-size:9.5px;letter-spacing:.12em;color:#3d3d3d;margin-top:6px}
+/* one item fills the row, two split it, more wrap — no per-count classes.
+   min() clamps the track floor to the container, so a narrow phone gets one
+   column instead of a 340px track spilling out of its box */
+.media{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));
+  gap:6px 6px;padding:24px var(--pad) 0;align-items:start}
+.media figure{margin:0}
+.media img,.media video{width:100%;height:auto;background:#e0e1e4}
+.media figcaption{font-size:9px;letter-spacing:.14em;color:var(--faint);margin-top:8px;
+  display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+/* audio has no picture to tile: give it the full width of the grid */
+.media .au{grid-column:1/-1}
+.slot{background:repeating-linear-gradient(45deg,#dcdde2 0 8px,#e7e8ec 8px 16px);
+  display:flex;align-items:center;justify-content:center;height:190px}
+.slot span{font-size:10px;letter-spacing:.12em;color:#6a6a6a;background:var(--bg);
+  padding:4px 10px;text-align:center}
+/* audio: the native control bar, which needs no JS and stays accessible */
+audio{width:100%;height:38px;display:block;margin-top:10px}
+figure.au img{margin-bottom:0}
+/* the FFT waterfall plate: frequency across, time down, newest at the bottom.
+   Rendered at 1000x220 and scaled to the column — it is smooth data, so it
+   takes enlargement well. */
+.wf{display:block;width:100%;aspect-ratio:1000/220;object-fit:cover;background:var(--bg)}
+.dur{font-variant-numeric:tabular-nums;color:var(--peri-dk);flex:none}
+
+.entries{padding:40px var(--pad) 0;display:flex;flex-direction:column;gap:30px;max-width:780px}
+.entries section{display:block}
+.eh{font-size:11px;letter-spacing:.16em;margin:0}
+.entries p{font-size:12px;line-height:1.8;color:#3a3a3a;margin:10px 0 0}
+.entries b{color:var(--ink);font-weight:400}
+.pnav{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:baseline;
+  padding:48px var(--pad) 8px;font-size:10px;letter-spacing:.14em}
+.pnav .mid{font-size:9px;letter-spacing:.2em;color:var(--faint)}
+.pnav .end{text-align:right}
+
+/* ---------------------------------------------------------------- log lists */
+.loglist{padding:28px var(--pad);display:flex;flex-direction:column;gap:6px;
+  font-size:11px;line-height:1.7;color:var(--mut);max-width:680px}
+.loglist.wide{max-width:820px;gap:10px}
+.loglist p{margin:0;scroll-margin-top:20px}
+.loglist b{color:var(--ink);font-weight:400}
+.loglist .more{margin-top:8px;letter-spacing:.14em}
+
+/* --------------------------------------------------------------- long-form */
+.prose{padding:8px var(--pad) 0;max-width:680px;font-size:12.5px;line-height:1.85;color:#2e2e2e}
+/* prose on a project page sits under the stats/media, so it needs its own
+   top gap and matches the wider measure of the FIELD NOTES block */
+.prose.page{padding-top:34px;max-width:780px}
+.prose.page > h2:first-child,.prose.page > h3:first-child{margin-top:0}
+.prose h2,.prose h3,.prose h4{font-family:'Michroma',sans-serif;letter-spacing:.12em;
+  margin:38px 0 0;line-height:1.5}
+.prose h2{font-size:12px}
+.prose h3{font-size:11px;color:#333}
+.prose h4{font-size:10px;color:var(--mut)}
+.prose p{margin:14px 0 0}
+.prose ul,.prose ol{margin:14px 0 0;padding-left:20px}
+.prose li{margin:5px 0}
+.prose blockquote{margin:18px 0 0;padding:2px 0 2px 18px;border-left:3px solid var(--peri);color:var(--mut)}
+.prose blockquote p{margin:6px 0 0}
+.prose blockquote p:first-child{margin:0}
+.prose code{background:#e0e1e4;padding:1px 5px;border-radius:2px;font-size:11.5px}
+.prose pre{background:#e0e1e4;padding:14px 16px;margin:18px 0 0;overflow-x:auto}
+.prose pre code{background:none;padding:0;font-size:11.5px;line-height:1.6}
+.prose hr{border:none;border-top:1px solid var(--hair);margin:32px 0 0}
+.prose img,.prose video{margin:20px 0 0;width:100%;height:auto;background:#e0e1e4}
+.prose figure{margin:22px 0 0}
+.prose figure img,.prose figure video{margin:0}
+.prose figcaption{font-size:9px;letter-spacing:.14em;color:var(--faint);margin-top:8px;
+  line-height:1.6;display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.prose figure.au{margin-top:26px}
+.prose a{text-decoration:underline;text-underline-offset:2px}
+
+/* ------------------------------------------------------------------ footer */
+.foot{padding:44px 20px 20px;display:flex;flex-direction:column;gap:6px}
+.footband{padding:14px 18px}
+.footband h2{font-family:'Michroma',sans-serif;font-size:12px;letter-spacing:.14em;
+  margin:0 0 8px;color:var(--ink)}
+.footband p{margin:0;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
+.footband.lilac{background:var(--lilac)}
+.footband.lilac p{color:#26284a}
+.footband.lilac a{color:#1d1f3a;text-decoration:underline;text-underline-offset:2px}
+.footband.lilac a:hover{color:#000}
+.footband.green{background:var(--green)}
+.footband.green p{color:#2e402e;font-size:10.5px}
+.footband.green a{color:#1c2b1c;text-decoration:underline;text-underline-offset:2px}
+
+/* ------------------------------------------------------------- responsive */
+@media (max-width:900px){
+  .dag{display:none}
+  .hdr .gnav{display:flex}
+}
+@media (max-width:800px){
+  :root{--pad:24px}
+  .row{grid-template-columns:80px 1fr}
+  .row .hmwrap{grid-column:1/-1;margin-top:18px}
+  .crow{grid-template-columns:1fr 70px;gap:4px 16px}
+  .crow .n{grid-row:1}
+  .crow .s{grid-row:1}
+  .crow .d{grid-column:1/-1}
+  .crow.bridges .n{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .phdr{gap:24px;flex-wrap:wrap}
+  .phdr h1{font-size:26px}
+  .hdr h1{font-size:26px}
+}
+@media (max-width:520px){
+  .phdr .g{transform:scale(.72);transform-origin:left top;margin-bottom:-30px}
+  .pnav{grid-template-columns:1fr;gap:8px}
+  .pnav .end{text-align:left}
+}

@@ -1,1 +1,309 @@
-# website
+# XENOZOA
+
+Personal showcase and field log. A static site built by a small Node script
+from a folder of plain content files. **No dependencies, no framework, and no
+client-side JavaScript in the output** — the commit fields and the DAG nav are
+rendered at build time and arrive as plain HTML and SVG.
+
+```bash
+node build.js             # build once -> dist/
+node build.js --serve     # build, serve dist/ on :8000, rebuild on save
+node build.js --scaffold  # create page files for any systems missing one
+```
+
+`npm run build` / `npm run dev` do the same. Node 18+. There is nothing to
+install.
+
+## Layout
+
+```
+content/site.js         site metadata, genera, the CHRONICA log, the domain
+content/projects.js     the ledger — what the index rows and the DAG need
+content/projects/*.md   one page per system: its prose, stats and media
+content/posts/*.md      long-form writing (SCRIPTA)
+static/                 copied verbatim into dist/ (styles.css, favicon.svg, media/)
+build.js                the generator
+spectrogram.js          build-time FFT waterfalls for audio
+dist/                   output — generated, gitignored, never edited by hand
+```
+
+**The split matters.** `projects.js` holds the structured facts that appear in
+more than one place — name, genus, status, glyph, commit field, cross-filing.
+`content/projects/<slug>.md` holds everything that appears only on that
+system's own page. You write prose in Markdown; you never edit generated HTML,
+and you never write a paragraph inside a JS string literal.
+
+The build emits `index.html`, `writing.html`, `chronica.html`, `404.html`,
+`robots.txt`, a page per system under `projects/`, a page per post under
+`writing/`, and (once a domain is set) `CNAME`, `sitemap.xml` and `feed.xml`.
+
+Every internal link is relative, so `dist/` works unchanged from `file://`,
+from a GitHub Pages project subpath, or from a custom domain.
+
+## Adding a system
+
+One object in `content/projects.js`. Order within a genus is the order shown.
+
+```js
+{
+  slug: 'lantern',              // -> projects/lantern.html
+  name: 'LANTERN',
+  genus: 'optica',              // an id from site.js
+  status: 'SEED',               // ACTIVE | SHIPPED | CYCLING | DORMANT | SEED
+  featured: false,              // true = full index row; both get a full page
+  repo: 'MLTQ/lantern',         // or null
+  summary: 'One sentence.',
+  log: [{ date: '2026.09.01', text: 'first light' }],  // date optional
+  heat: { seed: 227, ramp: 'seed' },
+  glyph: [{ x: 14, y: 14, w: 28, h: 28, r: '50%' }],
+  tags: ['Optics'],
+}
+```
+
+From that the build derives the index row, the page, the DAG node and edge, the
+genus count in the band, the previous/next links on its neighbours, and the
+sitemap entry. Nothing is written twice.
+
+`cross: ['retia']` cross-files a system into a second genus: it draws a
+periwinkle DAG edge and lists it under that genus's bridges. `mesh: true`
+appends `· ON THE MESH` to its status.
+
+Then run `node build.js --scaffold` to create its page file.
+
+### Glyphs
+
+A list of rectangles on a 56×56 grid — `x, y, w, h`, plus optional `r`
+(border-radius: a number in grid units, or a CSS string like `'50%'` or
+`'38% 62% 55% 45%'`), `rot` (degrees), and `ring` (border width, which makes
+the shape hollow). The build scales one definition to 56px for the index and
+110px for the page hero, so a mark is never redrawn at a second size.
+
+### Commit fields
+
+Stylized by default: `{ seed, ramp }`, where ramp is `up`, `down`, `flat`, or
+`seed` (sparse). The caption says STYLIZED so nobody mistakes it for data.
+
+For real data, swap in one integer per day, oldest first — e.g. from the GitHub
+stats API — and the caption switches to naming the window:
+
+```js
+heat: { counts: [0, 3, 1, 0, 0, 2, ...] }
+```
+
+## Writing a project page
+
+Each system has a file at `content/projects/<slug>.md`. This is the one you
+open to add commentary, write up a result, or log what happened this week.
+`--scaffold` creates any that are missing and never touches one that exists.
+
+```markdown
+---
+stats:
+  23.4 dB | ONE-SHOT ENCODER, HELD-OUT
+  ~600 KB | 64-FRAME WINDOW ON DISK
+media:
+  avenue_fit.gif | ground truth vs reconstruction
+  slot | drop: prior_sample_v1.gif — real fit | generated
+links:
+  Design notes | https://example.com
+---
+
+## 2026.09.01 — WHAT HAPPENED
+
+Ordinary Markdown from here down. A `##` heading becomes a dated section;
+newest at the top reads best.
+```
+
+The rules:
+
+- **Body empty → the page falls back** to the `log` lines from `projects.js`,
+  rendered as FIELD NOTES. Write anything real and it takes over. That way the
+  index row and the page can never quietly disagree.
+- **Frontmatter is optional.** `stats` (up to 4 cards), `media` and `links` are
+  indented lists, one per line, split on the first `|`. Later pipes stay in the
+  right-hand side, so captions may contain them.
+- **`media`** takes one file per line — see below.
+- **HTML comments are dropped**, so `<!-- todo -->` never ships, and a body of
+  nothing but comments still counts as empty.
+- A `.md` whose name matches no project **fails the build** rather than sitting
+  there silently never rendering.
+
+`content/projects/jewels.md` is the worked example.
+
+To attach a full blog post to a system instead of a page section, write it in
+`content/posts/` with `project: jewels` in its frontmatter — it then appears
+under WRITTEN on that system's page, and links back.
+
+## Images, video and audio
+
+Drop the file in `static/media/` and reference it as `media/<name>` from
+anywhere — a project page, a post, frontmatter or body. The build rewrites the
+path for each page's depth, so one spelling works from every page.
+
+In frontmatter, as a row of the `media:` list:
+
+```markdown
+media:
+  avenue_fit.png      | ground truth vs reconstruction
+  loop:avenue_fit.mp4 | ground truth vs reconstruction
+  walkthrough.mp4     | the full run, with sound
+  scene_03.mp3        | scene 3 — the cistern
+  loop:room_tone.wav  | cistern room tone
+  slot                | drop: not shot yet
+```
+
+Or in the body, where the image syntax covers video too — the extension
+already says which it is:
+
+```markdown
+![ground truth vs reconstruction](media/avenue_fit.png)
+![the rig running](media/demo.mp4)
+![scene 3 — the cistern](media/scene_03.mp3)
+```
+
+The text after `|` (or in the `[...]`) is a visible caption **and** the alt
+text. Omit it and the media renders bare.
+
+- **`loop:`** on video plays silently on a loop with no controls — a GIF, at a
+  fraction of the bytes. Reach for this for result clips. Without it, video
+  gets normal controls and only loads on demand (`preload="metadata"`).
+- **Audio gets an FFT waterfall.** Every audio file is analysed at build time
+  and the plate fills the block above its player: frequency left to right on a
+  log axis (40 Hz to 16 kHz), time down the plate, so it reads the way a live
+  waterfall moves — newest at the bottom, older rows having scrolled up. See
+  below.
+- **Audio never autoplays**, whatever you write. `loop:` on audio only sets
+  `loop`, which is what you want for room tone and drones.
+- **Runtime is read from the file** and printed at the end of the caption —
+  MP3 (CBR and VBR), WAV, FLAC, M4A, OGG and Opus. Unreadable, no badge; it
+  never guesses.
+- **Poster frames and cover art are automatic**: a `clip.jpg`, `clip.png` or
+  `clip.webp` sitting beside `clip.mp4` becomes its poster, and beside
+  `track.mp3` it replaces that track's waterfall — an explicit picture always
+  wins over the generated one.
+- **Dimensions are read from the file header** (PNG, JPEG, GIF, WebP) and
+  written onto the tag, so the page doesn't jump as media loads.
+- **A missing file fails the build**, naming the file and the page that wants
+  it, rather than shipping a broken image.
+- Images and video tile: one fills the width, two sit side by side, more wrap,
+  one column on a phone. Audio always takes the full width — there's no picture
+  to tile.
+
+GIFs still work as ordinary images, but an MP4 with `loop:` is typically ten to
+fifty times smaller for the same clip:
+
+```bash
+ffmpeg -i clip.gif -movflags +faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" clip.mp4
+```
+
+Formats: PNG, JPEG, GIF, WebP, AVIF, SVG for images; MP4, WebM, MOV for video;
+MP3, WAV, FLAC, M4A, OGG, Opus for audio. MP4 (H.264 + AAC) and MP3 are the
+safest choices. WAV and FLAC are large — fine for a short room tone, worth
+converting for anything longer:
+
+```bash
+ffmpeg -i take.wav -codec:a libmp3lame -q:a 2 take.mp3
+```
+
+The players are the browser's native `<audio>` and `<video>` controls: no
+JavaScript, keyboard-accessible, and nothing to load. Anything in
+`static/media/` ships whether or not a page references it, so delete what you
+stop using.
+
+### The audio waterfall
+
+Adding `take.mp3` to `static/media/` also produces `take.spectrum.png` beside
+it — a 1000x220 plate of the whole file:
+
+- **frequency** left to right, logarithmic, 40 Hz at the left edge to 16 kHz at
+  the right, so speech and music fill the width instead of bunching up;
+- **time** down the plate, newest at the bottom;
+- **loudness** as colour, over 78 dB from the background through periwinkle to
+  ink — the same ramp as the commit fields.
+
+It is generated once and regenerated only when the audio is newer, so builds
+stay fast. Plates whose audio you delete are removed on the next build.
+**Commit the `.spectrum.png` files**: that way CI never needs ffmpeg.
+
+ffmpeg is used only to decode audio to raw samples — everything after that
+(window, FFT, log-frequency mapping, colour, PNG encoding) is plain Node with
+zlib, so there is still nothing to install. Without ffmpeg the build says so
+and carries on; the block simply has no plate.
+
+To change the look, the constants at the top of `spectrogram.js` are the whole
+interface — `W`/`H`, `DB_FLOOR` for contrast, `F_MIN` for the left edge,
+`STOPS` for the colour ramp, and `TIME_DOWN` to flip the time axis.
+
+## Adding a post
+
+One Markdown file in `content/posts/`, named `YYYY-MM-DD-slug.md`:
+
+```markdown
+---
+title: The ledger is the site
+date: 2026-08-27
+summary: One line for the index and the feed.
+tags: Meta, Tooling
+project: jewels     # optional — cross-links the post and that system
+draft: false        # true keeps it out of the build entirely
+---
+
+Body text.
+```
+
+The Markdown subset is deliberately small: headings, paragraphs, lists,
+blockquotes, fenced code, rules, and inline `**bold**`, `*italic*`, `` `code` ``,
+links and images. **List items must be a single line.** Any block starting with
+`<` is passed through as raw HTML — that is the escape hatch for anything the
+parser doesn't cover.
+
+Images and video work the same way as on project pages — see above.
+
+## Deploying
+
+GitHub Pages, via `.github/workflows/deploy.yml` on every push to `main`.
+
+One-time setup: on github.com, **Settings → Pages → Build and deployment →
+Source: GitHub Actions**. Nothing else. The workflow runs `node build.js` and
+publishes `dist/`.
+
+### The domain
+
+Set it in one place — `domain` in `content/site.js`:
+
+```js
+domain: 'xenozoa.systems',   // bare host, no protocol, no trailing slash
+```
+
+That value drives `dist/CNAME`, the absolute URLs in `sitemap.xml` and
+`feed.xml`, the `canonical` and `og:url` tags, and the `Sitemap:` line in
+`robots.txt`. While it is `null` the site still builds and works — those four
+files are simply skipped, and the build says so.
+
+After setting it and pushing, point DNS at GitHub Pages:
+
+- **Apex** (`example.com`) — four `A` records to `185.199.108.153`,
+  `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+- **Subdomain** (`www.` or `log.`) — one `CNAME` to `MLTQ.github.io`
+
+Then tick **Enforce HTTPS** under Settings → Pages once the certificate is
+issued.
+
+## Notes
+
+- Muted greys in `styles.css` are set at ≥4.5:1 against the off-white ground;
+  the caption sizes here are well under the large-text threshold.
+- `dist/` is reconciled, not wiped: the build writes, then deletes only what it
+  didn't produce, and never removes a file newer than its own start. Running a
+  build by hand while `--serve` is up is safe.
+- `--serve` watches `build.js` and `spectrogram.js` as well as `content/` and
+  `static/`, and restarts itself when either changes — otherwise it would keep
+  rebuilding with the copy of the generator it loaded at startup.
+- The build validates as it runs: unknown genus, duplicate slug, a CHRONICA
+  entry pointing at a system that doesn't exist, a page file whose slug matches
+  no system, a referenced media file that isn't there, or a post missing
+  `title` / `date` all fail the build rather than producing a broken page.
+  Validation runs before anything is written, so a failed build leaves the last
+  good output intact.
+- Type is Michroma + Space Mono, loaded from Google Fonts — the only external
+  request the site makes. Self-host into `static/` if you'd rather it make none.
