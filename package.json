@@ -1,12 +1,14 @@
 {
-  "name": "xenozoa",
+  "name": "mltq-archive",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "XENOZOA — parallel systems / field log. Static site, no dependencies.",
+  "description": "MLTQ Archive \u2014 parallel systems / field log. Static site, no dependencies.",
   "scripts": {
     "build": "node build.js",
     "dev": "node build.js --serve"
   },
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  }
 }

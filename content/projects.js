@@ -1,4 +1,4 @@
-/* XENOZOA — every system, in one place.
+/* MLTQ Archive — every system, in one place.
    The index rows, the DAG nav, the commit fields and the per-project
    pages are all generated from this array. Order within a genus is the
    order shown on the index.

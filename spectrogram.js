@@ -1,4 +1,4 @@
-/* XENOZOA — build-time FFT waterfall for audio files.
+/* MLTQ Archive — build-time FFT waterfall for audio files.
 
    Every audio file in static/media/ gets a companion <name>.spectrum.png:
    frequency left to right on a log axis, time down the image, so the plate

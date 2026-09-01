@@ -1,4 +1,4 @@
-# XENOZOA
+# MLTQ Archive
 
 Personal showcase and field log. A static site built by a small Node script
 from a folder of plain content files. **No dependencies, no framework, and no

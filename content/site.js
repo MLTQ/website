@@ -1,4 +1,4 @@
-/* XENOZOA — site-level configuration.
+/* MLTQ Archive — site-level configuration.
    Edit this file for anything that isn't a project or a post. */
 
 export default {
@@ -16,7 +16,7 @@ export default {
   /* ---------------------------------------------------------------
      DOMAIN — the one thing to set once you've picked a name.
      Set it to the bare host, no protocol and no trailing slash:
-         domain: 'xenozoa.systems',
+         domain: 'azoa.online',
      Setting it makes the build emit CNAME, sitemap.xml, feed.xml and
      absolute og:url tags. Leaving it null skips those (the site still
      builds and works — every internal link is relative, so it runs

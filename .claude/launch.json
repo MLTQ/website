@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "xenozoa",
+      "name": "mltq-archive",
       "runtimeExecutable": "node",
       "runtimeArgs": ["build.js", "--serve"],
       "port": 8000

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* XENOZOA — static site build. Plain Node, no dependencies.
+/* MLTQ Archive — static site build. Plain Node, no dependencies.
    Reads content/ + static/, writes dist/.
 
        node build.js            build once
@@ -1071,7 +1071,7 @@ ${footerBands(0)}`,
   sweep(t0)
 
   const written = projects.filter(p => pages[p.slug] && pages[p.slug].html).length
-  console.log(`XENOZOA — ${projects.length} systems (${written} with page files), `
+  console.log(`${site.name} — ${projects.length} systems (${written} with page files), `
     + `${posts.length} posts, ${site.chronica.length} log entries `
     + `→ dist/ (${Date.now() - t0}ms)`)
 }
