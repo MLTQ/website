@@ -221,7 +221,7 @@ export default [
 /* ============ PHONICA — things that speak and sound ============ */
 {
   slug: 'pharaoh', name: 'PHARAOH', genus: 'phonica', status: 'ACTIVE', featured: true,
-  repo: 'MLTQ/pharaoh',
+  repo: 'MLTQ/pharaoh', mesh: true,
   summary: 'An AI-powered audio drama production suite built around the Pyramid workflow: story bible → storyboard → script → assets → composition → render. Operable by humans in the GUI and by agents through the headless CLI.',
   log: [
     { text: 'local TTS, foley, and score servers; a Fountain scene editor' },
@@ -316,8 +316,8 @@ export default [
 },
 {
   slug: 'gruve-kit', name: 'GRUVE-KIT', short: 'GRUVE', genus: 'retia', status: 'ACTIVE', featured: false,
-  repo: null,
-  summary: 'SDKs that make any app mesh-ready: announce to the local agent, get a lobby tile, share state with everyone viewing. Apps are reached by name, never by address.',
+  repo: 'MLTQ/gruve-kit',
+  summary: 'A peer-hosted lobby for a friend group. One app on each laptop, and everyone\'s running projects appear on everyone\'s board over direct encrypted connections: no server, no deploy, no accounts. The kit is the SDKs that make any app mesh-ready, reached by name, never by address.',
   log: [{ text: 'name-addressed apps; a lobby tile per announcement' }],
   heat: { seed: 193, ramp: 'up' },
   glyph: [
