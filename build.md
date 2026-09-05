@@ -4,7 +4,8 @@
 Builds the static archive from the structured ledger, Markdown content, and static assets. Content and navigation remain usable without client JavaScript.
 
 ## Components
-- `buildIndex` / `leniaMarkup`: assemble the homepage and its progressively enhanced Lenia colony with a green-to-purple density legend. The canvas is hidden from assistive technology until it is interactive.
+- `buildIndex` / `leniaMarkup`: assemble the homepage and its progressively enhanced Lenia colony with a green-to-purple density legend and a small reset button inside the stage's bottom-right corner. The canvas is hidden from assistive technology until it is interactive.
+- The invitation below the controls links “mathematical life forms” to the original Lenia paper on arXiv.
 - `shell`: shared metadata, styles, and document structure. Only the homepage loads the specimen module.
 - `genusNav`: section links on every screen size.
 - `build`: validates content, emits pages and discovery files, copies assets, and reconciles output.

@@ -341,11 +341,13 @@ function leniaMarkup() {
 <img class="lenia-still" src="lenia/still.svg" alt="Six small glassy Orbium gliders in green and purple, facing different directions." width="660" height="360">
 <canvas aria-hidden="true" aria-label="Interactive jelly Lenia colony. Drag to stretch; arrow keys to nudge; space to pause." aria-describedby="lenia-hint" tabindex="-1"></canvas>
 <span class="lenia-mark" aria-hidden="true">01 / BIOTA</span>
+<button class="lenia-reset" type="button" data-reset disabled aria-label="Reset Lenia specimen" title="Start a new colony"><span aria-hidden="true">↺</span> Reset</button>
 </div>
 <figcaption class="lenia-caption">
 <div><a href="https://github.com/Chakazul/Lenia" class="lenia-name" title="Lenia by Bert Chan">ORBIUM UNICAUDATUS</a><span class="lenia-state"><i aria-hidden="true"></i><span data-status>STILL SPECIMEN</span></span></div>
 <p class="lenia-density" aria-label="Cell density: green at zero, purple at one"><span>CELL DENSITY</span><span>0</span><i aria-hidden="true"></i><span>1</span></p>
-<div class="lenia-actions"><span id="lenia-hint" data-hint>Drag gently. Let go.</span><button type="button" data-pause disabled aria-label="Pause Lenia simulation">Pause</button><button type="button" data-reset disabled aria-label="Reset Lenia specimen">Reset ↺</button></div>
+<div class="lenia-actions"><span id="lenia-hint" data-hint>Drag gently. Let go.</span><button type="button" data-pause disabled aria-label="Pause Lenia simulation">Pause</button></div>
+<p class="lenia-invitation">These are <a href="https://arxiv.org/pdf/1812.05433">mathematical life forms</a>, feel free to pet them, they don’t bite</p>
 </figcaption>
 <noscript><p class="lenia-note">Enable JavaScript to bring the specimen to life.</p></noscript>
 </figure>
