@@ -12,7 +12,8 @@ The original O2u Orbium unicaudatus specimen and its exact polynomial Lenia rule
 ## Contracts
 | Dependent | Expects | Breaking changes |
 |---|---|---|
-| `gpu.js` | Float32 arrays, normalized taps, 64² field | Packing or size |
+| `gpu.js` | Normalized kernel taps | Tap packing |
+| `colony.js` | Centered 64² original specimen to rotate into the larger habitat | Seed layout |
 | `simulation.js` | Polynomial kernel/growth; μ=.15, σ=.015, Δt=.1 | Switching to Gaussian rules |
 
 ## Attribution

@@ -3,7 +3,7 @@
 Personal showcase and field log. A static site built by a small Node script
 from a folder of plain content files. **No dependencies and no framework.** The archive content and commit fields
 are rendered at build time. The homepage progressively enhances its header
-with a WebGPU Lenia glider rendered as refractive mint jelly.
+with a WebGPU Lenia colony rendered as refractive green-to-purple jelly.
 
 ```bash
 node build.js             # build once -> dist/
@@ -42,18 +42,24 @@ The build emits `index.html`, `writing.html`, `chronica.html`, `404.html`,
 Every internal link is relative, so `dist/` works unchanged from `file://`,
 from a GitHub Pages project subpath, or from a custom domain.
 
-## Living header specimen
+## Living header colony
 
 The former mesh graph is replaced by **Orbium unicaudatus**, the original
 MIT-licensed O2u Lenia glider by [Bert Chan](https://github.com/Chakazul/Lenia).
 Section links remain available beside it on desktop and above it on phones.
 
-- Native WebGPU compute evolves a 64 × 64 torus with the source specimen's
+- Native WebGPU compute evolves a shared 160 × 112 torus with the source specimen's
   exact polynomial kernel and growth rules (R=13, T=10, μ=.15, σ=.015).
-- A GPU centroid pass follows the glider as it crosses world boundaries.
+- Six small gliders begin at varied positions with random continuous headings.
+  They move at 16 evolution steps per second, 60% slower than the original header.
+  The fixed camera fits the whole habitat; gliders can meet and collide.
+- A GPU reduction measures occupancy about once per simulation second. When
+  every cell is zero, 3–7 new gliders spawn with fresh positions and directions.
+  Reset also randomizes the colony; stale readbacks cannot overwrite a reset.
 - The material raymarches a smooth 3D volume derived from the 2D cell density:
-  entry/exit refraction, thickness-dependent mint absorption, studio highlights
-  and a soft shadow. This is separate from the Lenia-3D project.
+  entry/exit refraction, thickness-dependent absorption, studio highlights
+  and soft shadows. Color follows cell state A: green at low density and purple
+  at high density. This is separate from the Lenia-3D project.
 - Drag to stretch the rendering and release to let the damped spring settle.
   Arrow keys nudge; space toggles play. Pause and Reset have ordinary buttons.
 - Reduced-motion visitors start paused. Offscreen specimens and hidden tabs
@@ -64,8 +70,11 @@ Section links remain available beside it on desktop and above it on phones.
 No third-party runtime code, remote textures, or tracking is added. The MIT
 notice is in `static/lenia/LICENSE.txt`. Module companion documents describe
 the rendering and simulation contracts. Run the numerical regression with
-`node --test tests/lenia.test.js`; use `npm run dev` to test the live WebGPU
-renderer (HTTPS or localhost is required by WebGPU).
+`node --test tests/*.test.js`; use `npm run dev` to test the live WebGPU
+renderer (HTTPS or localhost is required by WebGPU). The isolated browser
+regression harness in `tests/browser.html` / `tests/browser.js` checks real GPU
+empty-field reseeding, a faint surviving cell, and reset/readback races; it is
+never included in the published output.
 
 ## Adding a system
 

@@ -6,7 +6,7 @@ Styles the specimen as part of the archive header, with a seamless page ground a
 ## Components
 - `.lenia-stage`: reserves canvas space, overlays fallback and WebGPU surfaces without layout shifts.
 - Data-state selectors display the live canvas only after initialization succeeds.
-- Caption and controls use the archive's established compact typography.
+- Caption and controls use the archive's established compact typography. A green-to-purple strip labels the 0–1 cell-density palette.
 - Responsive rules stack the specimen below the introduction on phones; touch scroll remains possible.
 
 ## Contracts

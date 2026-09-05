@@ -5,8 +5,9 @@ Progressively enhances the homepage specimen with a live WebGPU simulation and a
 
 ## Components
 - `start`: finds the scoped controls and creates the renderer, falling back to the still on errors.
-- `tick`: capped 30 fps rendering, fixed 40 Lenia steps per second, bounded catch-up, damped drag spring.
-- Pointer handlers: local stretch with pointer capture and cancellation; arrow keys provide equivalent nudges.
+- `tick`: capped 30 fps rendering, fixed 16 Lenia steps per second (60% slower), bounded catch-up, a gentler damped drag spring.
+- Population callback: displays measured occupancy and schedules a fresh drawing when an empty field is automatically reseeded.
+- Pointer handlers: orthographic ground coordinates keep small gliders under the pointer; localized stretch with capture and cancellation. Arrow keys nudge near the most recent pointer anchor.
 - Pause/play and reset controls remain ordinary keyboard-operable buttons. Space on the canvas toggles motion.
 - Visibility, intersection, resize, and page lifecycle observers manage GPU work and resources.
 

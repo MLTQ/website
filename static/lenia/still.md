@@ -1,10 +1,10 @@
 # still.svg
 
 ## Purpose
-Small local mint-glass illustration shown while WebGPU starts, when WebGPU fails, or when JavaScript is disabled. Clearly labeled as a still specimen by the page.
+Small local green/purple glass colony illustration shown while WebGPU starts, when WebGPU fails, or when JavaScript is disabled. Clearly labeled as a still specimen by the page.
 
 ## Components
-Layered SVG paths, gradients, rim highlights and a blurred contact shadow evoke the Orbium glider's curled silhouette.
+Six scaled and rotated instances of layered SVG paths, gradients, rim highlights and a blurred contact shadow evoke the Orbium glider's curled silhouette.
 
 ## Contracts
 | Dependent | Expects | Breaking changes |

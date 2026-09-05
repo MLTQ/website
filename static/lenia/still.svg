@@ -1,15 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="660" height="360" viewBox="0 0 660 360" role="img" aria-label="Mint glass Orbium specimen">
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="360" viewBox="0 0 660 360" role="img" aria-label="Glass Orbium colony">
 <defs>
- <linearGradient id="glass" x1="0" y1="0" x2=".75" y2="1"><stop stop-color="#c9eee0"/><stop offset=".27" stop-color="#6abe9e"/><stop offset=".49" stop-color="#155c46"/><stop offset=".66" stop-color="#71c4a0"/><stop offset=".89" stop-color="#25835e"/><stop offset="1" stop-color="#bdeed9"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2=".75" y2="1"><stop stop-color="#c9eee0"/><stop offset=".27" stop-color="#6abe9e"/><stop offset=".49" stop-color="#8b47b5"/><stop offset=".66" stop-color="#71c4a0"/><stop offset=".89" stop-color="#6950a9"/><stop offset="1" stop-color="#bdeed9"/></linearGradient>
  <linearGradient id="rim" x2="0" y2="1"><stop stop-color="#fff"/><stop offset=".35" stop-color="#a7ddc9"/><stop offset=".6" stop-color="#245c4a"/><stop offset="1" stop-color="#effff7"/></linearGradient>
- <radialGradient id="core"><stop stop-color="#144b37"/><stop offset=".58" stop-color="#309465"/><stop offset="1" stop-color="#90d8ad"/></radialGradient>
+ <radialGradient id="core"><stop stop-color="#6b2b9e"/><stop offset=".58" stop-color="#ae74ce"/><stop offset="1" stop-color="#90d8ad"/></radialGradient>
  <filter id="blur"><feGaussianBlur stdDeviation="10"/></filter>
  <filter id="soft"><feGaussianBlur stdDeviation="3"/></filter>
 </defs>
-<ellipse cx="335" cy="267" rx="116" ry="22" fill="#466654" opacity=".23" filter="url(#blur)"/>
+<defs><g id="glider"><ellipse cx="335" cy="267" rx="116" ry="22" fill="#466654" opacity=".23" filter="url(#blur)"/>
 <path d="M357 86C413 88 455 130 451 181C449 237 404 265 346 267C292 273 238 252 219 214C195 170 224 130 266 113C237 140 232 177 251 200C269 221 312 224 339 207C365 191 364 170 346 152C330 137 302 136 284 146C292 110 316 85 357 86Z" fill="url(#glass)" stroke="url(#rim)" stroke-width="3"/>
 <path d="M358 147C391 142 418 172 406 198C396 225 355 233 325 218C352 209 369 186 358 147Z" fill="url(#core)" opacity=".83"/>
 <path d="M265 118C225 141 218 178 236 210M296 249C355 277 429 244 443 213" fill="none" stroke="#eafff4" stroke-width="5" stroke-linecap="round" opacity=".88"/>
 <path d="M350 96C392 91 431 123 434 144" fill="none" stroke="#f2fff8" stroke-width="9" stroke-linecap="round" opacity=".7" filter="url(#soft)"/>
 <path d="M322 150C342 146 357 159 356 172" fill="none" stroke="#d4ffe4" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+</g></defs>
+<use href="#glider" transform="translate(155 110) rotate(-22) scale(.29) translate(-335 -185)"/>
+<use href="#glider" transform="translate(330 85) rotate(48) scale(.29) translate(-335 -185)"/>
+<use href="#glider" transform="translate(510 130) rotate(115) scale(.29) translate(-335 -185)"/>
+<use href="#glider" transform="translate(125 245) rotate(-72) scale(.29) translate(-335 -185)"/>
+<use href="#glider" transform="translate(305 230) rotate(162) scale(.29) translate(-335 -185)"/>
+<use href="#glider" transform="translate(495 255) rotate(14) scale(.29) translate(-335 -185)"/>
 </svg>

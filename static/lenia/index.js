@@ -1,4 +1,5 @@
 import { createGPU } from './gpu.js';
+import { WIDTH, HEIGHT, STEPS_PER_SECOND } from './colony.js';
 
 const root = document.querySelector('[data-lenia]');
 if (root) start(root);
@@ -18,6 +19,7 @@ async function start(root) {
   let last = 0;
   let accumulator = 0;
   let age = 0;
+  let occupancy = null;
   let pointer = null;
   const drag = [0, 0, 0, 0];
   const velocity = [0, 0];
@@ -38,11 +40,15 @@ async function start(root) {
     gpu?.destroy();
     console.warn('Lenia preview:', error);
   };
-  try { gpu = await createGPU(canvas, fail); } catch (error) { fail(error.message); return; }
+  try { gpu = await createGPU(canvas, fail, { onPopulation: result => {
+    occupancy = result.respawned ? null : result.occupied / (WIDTH * HEIGHT) * 100;
+    updateStatus();
+    if (result.respawned) { drag.fill(0); velocity.fill(0); pointer = null; schedule(); }
+  } }); } catch (error) { fail(error.message); return; }
   if (failed) { gpu.destroy(); return; }
 
   const updateStatus = () => {
-    status.textContent = paused ? 'PAUSED' : 'LIVING';
+    status.textContent = paused ? 'PAUSED' : occupancy === null ? 'LIVING' : `${occupancy.toFixed(1)}% OCCUPIED`;
     pause.textContent = paused ? 'Play' : 'Pause';
     pause.setAttribute('aria-label', paused ? 'Play Lenia simulation' : 'Pause Lenia simulation');
     root.dataset.paused = String(paused);
@@ -68,15 +74,15 @@ async function start(root) {
       const desired = pointer === null ? 0 : target[i];
       // Two substeps keep this damped spring stable across slower frames.
       for (let j = 0; j < 2; j++) {
-        velocity[i] += ((desired - drag[i]) * 115 - velocity[i] * 9) * dt / 2;
+        velocity[i] += ((desired - drag[i]) * 75 - velocity[i] * 8) * dt / 2;
         drag[i] += velocity[i] * dt / 2;
       }
       spring ||= Math.abs(drag[i]) + Math.abs(velocity[i]) > 0.001;
     }
     let steps = 0;
     if (!paused) {
-      accumulator += dt * 40;
-      steps = Math.min(3, Math.floor(accumulator));
+      accumulator += dt * STEPS_PER_SECOND;
+      steps = Math.min(2, Math.floor(accumulator));
       accumulator -= steps;
       age += dt;
     }
@@ -89,24 +95,30 @@ async function start(root) {
   listen(pause, 'click', toggle);
   listen(reset, 'click', () => {
     gpu.reset(); drag.fill(0); target.fill(0); velocity.fill(0);
-    age = accumulator = 0; pointer = null; root.dataset.dragging = 'false'; draw(0); schedule();
+    age = accumulator = 0; occupancy = null; updateStatus(); pointer = null; root.dataset.dragging = 'false'; draw(0); schedule();
   });
+  const groundPoint = event => {
+    const rect = canvas.getBoundingClientRect();
+    const scale = Math.max(3.1, 5.4 / (rect.width / rect.height));
+    const x = (2 * (event.clientX - rect.left) - rect.width) / rect.height;
+    const y = (2 * (event.clientY - rect.top) - rect.height) / rect.height;
+    return [x * scale, 0.33 + y * scale / 0.6717];
+  };
   listen(canvas, 'pointerdown', event => {
     if (event.button !== 0 || motion.matches) return;
-    pointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
-    const rect = canvas.getBoundingClientRect();
-    drag[2] = (event.clientX - rect.left - rect.width / 2) / rect.height * 4.6;
-    drag[3] = (event.clientY - rect.top - rect.height / 2) / rect.height * 5.5;
+    const [x, y] = groundPoint(event);
+    pointer = { id: event.pointerId, x, y };
+    drag[2] = x; drag[3] = y;
     canvas.setPointerCapture(event.pointerId);
     root.dataset.dragging = 'true';
-    nudge(0.6, -0.8);
+    nudge(0.4, -0.6);
     schedule();
   });
   listen(canvas, 'pointermove', event => {
     if (!pointer || event.pointerId !== pointer.id) return;
-    const scale = 4.6 / canvas.getBoundingClientRect().height;
-    target[0] = Math.max(-0.95, Math.min(0.95, (event.clientX - pointer.x) * scale));
-    target[1] = Math.max(-0.95, Math.min(0.95, (event.clientY - pointer.y) * scale * 1.25));
+    const [x, y] = groundPoint(event);
+    target[0] = Math.max(-0.7, Math.min(0.7, x - pointer.x));
+    target[1] = Math.max(-0.7, Math.min(0.7, y - pointer.y));
     schedule();
   });
   listen(canvas, 'pointerup', release);
