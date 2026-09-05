@@ -1,0 +1,26 @@
+.lenia{margin:0;min-width:0;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+.lenia-stage{position:relative;width:100%;height:300px;isolation:isolate}
+.lenia-stage canvas,.lenia-still{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.lenia-stage canvas{opacity:0;cursor:grab;touch-action:pan-y;outline:none}
+.lenia[data-mode="live"] canvas{opacity:1}
+.lenia[data-mode="live"] .lenia-still{visibility:hidden}
+.lenia[data-dragging="true"] canvas{cursor:grabbing}
+.lenia-stage canvas:focus-visible{outline:1px solid var(--peri-dk);outline-offset:-4px}
+.lenia-mark{position:absolute;top:8px;right:0;font-size:9px;letter-spacing:.18em;color:var(--faint);pointer-events:none}
+.lenia-caption{border-top:1px solid var(--hair);padding-top:12px;display:flex;flex-direction:column;gap:9px}
+.lenia-caption>div{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.lenia-name{font-size:10px;letter-spacing:.15em;color:#34594c}
+.lenia-state{display:flex;gap:6px;align-items:center;font-size:9px;letter-spacing:.13em;color:#416153}
+.lenia-state i{width:5px;height:5px;border-radius:50%;background:#718378}
+.lenia[data-mode="live"][data-paused="false"] .lenia-state i{background:#319064;box-shadow:0 0 0 3px #31906412}
+.lenia-actions{font-size:10px;color:var(--faint)}
+.lenia-actions [data-hint]{margin-right:auto}
+.lenia-actions button{font:inherit;background:transparent;border:0;padding:7px 0 7px 10px;color:var(--mut);cursor:pointer;min-height:30px}
+.lenia-actions button:hover{color:#1e6e51}
+.lenia-actions button:focus-visible{outline:2px solid var(--peri-dk);outline-offset:3px}
+.lenia-actions button:disabled{display:none}
+.lenia-note{font-size:11px;color:var(--mut)}
+@media (min-width:1250px){.lenia-stage{height:325px}}
+@media (max-width:900px){.lenia-stage{height:275px}.lenia-caption>div{gap:7px}.lenia-name{font-size:9px}}
+@media (max-width:650px){.lenia-stage{height:300px}.lenia{margin-top:12px}.lenia-mark{top:16px}.lenia-actions button{min-height:40px}.lenia-caption{padding-top:14px}}
+@media (prefers-reduced-motion:reduce){.lenia-stage canvas{cursor:default}}

@@ -1,9 +1,9 @@
 # MLTQ Archive
 
 Personal showcase and field log. A static site built by a small Node script
-from a folder of plain content files. **No dependencies, no framework, and no
-client-side JavaScript in the output** — the commit fields and the DAG nav are
-rendered at build time and arrive as plain HTML and SVG.
+from a folder of plain content files. **No dependencies and no framework.** The archive content and commit fields
+are rendered at build time. The homepage progressively enhances its header
+with a WebGPU Lenia glider rendered as refractive mint jelly.
 
 ```bash
 node build.js             # build once -> dist/
@@ -18,10 +18,12 @@ install.
 
 ```
 content/site.js         site metadata, genera, the CHRONICA log, the domain
-content/projects.js     the ledger — what the index rows and the DAG need
+content/projects.js     the ledger — index rows, statuses and cross-filing
 content/projects/*.md   one page per system: its prose, stats and media
 content/posts/*.md      long-form writing (SCRIPTA)
-static/                 copied verbatim into dist/ (styles.css, favicon.svg, media/)
+static/                 copied verbatim into dist/ (styles, favicon, media, Lenia)
+static/lenia/           isolated WebGPU simulation, glass renderer and still fallback
+tests/lenia.test.js     independent CPU longevity and locomotion check
 build.js                the generator
 spectrogram.js          build-time FFT waterfalls for audio
 dist/                   output — generated, gitignored, never edited by hand
@@ -39,6 +41,31 @@ The build emits `index.html`, `writing.html`, `chronica.html`, `404.html`,
 
 Every internal link is relative, so `dist/` works unchanged from `file://`,
 from a GitHub Pages project subpath, or from a custom domain.
+
+## Living header specimen
+
+The former mesh graph is replaced by **Orbium unicaudatus**, the original
+MIT-licensed O2u Lenia glider by [Bert Chan](https://github.com/Chakazul/Lenia).
+Section links remain available beside it on desktop and above it on phones.
+
+- Native WebGPU compute evolves a 64 × 64 torus with the source specimen's
+  exact polynomial kernel and growth rules (R=13, T=10, μ=.15, σ=.015).
+- A GPU centroid pass follows the glider as it crosses world boundaries.
+- The material raymarches a smooth 3D volume derived from the 2D cell density:
+  entry/exit refraction, thickness-dependent mint absorption, studio highlights
+  and a soft shadow. This is separate from the Lenia-3D project.
+- Drag to stretch the rendering and release to let the damped spring settle.
+  Arrow keys nudge; space toggles play. Pause and Reset have ordinary buttons.
+- Reduced-motion visitors start paused. Offscreen specimens and hidden tabs
+  suspend GPU work. Rendering is capped around 30 fps and at 1.5× pixel density.
+- Unsupported browsers, device loss and script failures leave a local SVG
+  illustration. All archive navigation and content remain functional.
+
+No third-party runtime code, remote textures, or tracking is added. The MIT
+notice is in `static/lenia/LICENSE.txt`. Module companion documents describe
+the rendering and simulation contracts. Run the numerical regression with
+`node --test tests/lenia.test.js`; use `npm run dev` to test the live WebGPU
+renderer (HTTPS or localhost is required by WebGPU).
 
 ## Adding a system
 
@@ -60,12 +87,12 @@ One object in `content/projects.js`. Order within a genus is the order shown.
 }
 ```
 
-From that the build derives the index row, the page, the DAG node and edge, the
-genus count in the band, the previous/next links on its neighbours, and the
+From that the build derives the index row, the page, the genus count in the
+band, the previous/next links on its neighbours, and the
 sitemap entry. Nothing is written twice.
 
-`cross: ['retia']` cross-files a system into a second genus: it draws a
-periwinkle DAG edge and lists it under that genus's bridges. `mesh: true`
+`cross: ['retia']` cross-files a system into a second genus and lists it
+under that genus's bridges. `mesh: true`
 appends `· ON THE MESH` to its status.
 
 Then run `node build.js --scaffold` to create its page file.

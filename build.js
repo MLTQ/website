@@ -5,9 +5,9 @@
        node build.js            build once
        node build.js --serve    build, serve dist/ on :8000, rebuild on change
 
-   Everything the browser receives is HTML and CSS. There is no client-side
-   JavaScript: the commit fields and the DAG nav are rendered here, at build
-   time. Every internal link is relative, so dist/ works from file://, from a
+   Content and commit fields are rendered as HTML/CSS at build time. The
+   homepage alone progressively enhances its Lenia specimen with WebGPU.
+   Every internal link is relative, so content works from file://, from a
    GitHub Pages subpath, or from a custom domain without reconfiguration. */
 
 import fs from 'node:fs'
@@ -70,7 +70,6 @@ const bySlug = () => Object.fromEntries(projects.map(p => [p.slug, p]))
 const genusOf = id => site.genera.find(g => g.id === id)
 const inGenus = id => projects.filter(p => p.genus === id)
 const bridgesTo = id => projects.filter(p => (p.cross || []).includes(id))
-const shortOf = p => p.short || p.name.split(/\s+/)[0].slice(0, 8)
 const strip = s => String(s).replace(/<[^>]+>/g, '')
 const dotted = d => d.replace(/-/g, '.')
 
@@ -334,53 +333,25 @@ function mediaTag(m) {
   return cap || audio ? `<figure${audio ? ' class="au"' : ''}>${inner}${cap}</figure>` : inner
 }
 
-/* ----------------------------------------------------------------- DAG nav */
+/* ------------------------------------------------------- homepage specimen */
 
-/* Root -> categories -> projects, over three staggered rows so labels stay
-   legible as the ledger grows. Cross-filed projects get a second, periwinkle
-   edge to the genus they are also filed under. */
-function dag(depth) {
-  const W = 620, H = 252, PAD = 26
-  const cats = [
-    ...site.genera.map(g => ({ id: g.id, label: g.label, href: u(depth, `index.html#${g.id}`) })),
-    { id: 'scripta', label: 'SCRIPTA', href: u(depth, 'writing.html') },
-    { id: 'chronica', label: 'CHRONICA', href: u(depth, 'chronica.html') },
-  ]
-  const step = W / cats.length
-  cats.forEach((c, i) => { c.x = step * (i + 0.5); c.y = 92 })
-
-  const rows = [150, 188, 226]
-  const span = (W - 2 * PAD) / projects.length
-  const nodes = projects.map((p, i) => ({
-    p,
-    x: PAD + span * (i + 0.5),
-    y: rows[i % rows.length],
-    s: p.weight
-      || ({ ACTIVE: 9, SHIPPED: 8, DORMANT: 7, CYCLING: 6, SEED: 5 }[p.status] || 7)
-      + (p.featured ? 1 : 0),
-  }))
-  const at = id => cats.find(c => c.id === id)
-  const root = { x: W / 2, y: 16 }
-  const line = (a, b, stroke) =>
-    `<line x1="${a.x.toFixed(1)}" y1="${a.y}" x2="${b.x.toFixed(1)}" y2="${b.y}" stroke="${stroke}"/>`
-
-  const edges = [
-    ...cats.map(c => line(root, c, '#bcbdc4')),
-    ...nodes.map(n => line(at(n.p.genus), n, '#bcbdc4')),
-    ...nodes.flatMap(n => (n.p.cross || [])
-      .filter(c => at(c)).map(c => line(at(c), n, '#8f93d9'))),
-  ]
-
-  return `<div class="dag" style="width:${W}px;height:${H}px">
-<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true" focusable="false">${edges.join('')}</svg>
-<span class="dag-root">${esc(site.name)}</span>
-${cats.map(c => `<a href="${c.href}" style="left:${c.x.toFixed(1)}px;top:${c.y}px"><span class="cat-dot"></span><span class="cat-lbl">${esc(c.label)}</span></a>`).join('\n')}
-${nodes.map(n => `<a href="${u(depth, `projects/${n.p.slug}.html`)}" style="left:${n.x.toFixed(1)}px;top:${n.y}px"><span class="prj-dot" style="width:${n.s}px;height:${n.s}px"></span><span class="prj-lbl">${esc(shortOf(n.p))}</span></a>`).join('\n')}
-<span class="legend">MESH INDEX — NODE SIZE = ACTIVITY · PERIWINKLE EDGES = CROSS-FILED</span>
-</div>`
+function leniaMarkup() {
+  return `<figure class="lenia" data-lenia data-mode="still" aria-label="Living Lenia specimen">
+<div class="lenia-stage">
+<img class="lenia-still" src="lenia/still.svg" alt="A translucent mint-green Orbium glider, shaped like a curled droplet of jelly." width="660" height="360">
+<canvas aria-hidden="true" aria-label="Interactive jelly Lenia glider. Drag to stretch; arrow keys to nudge; space to pause." aria-describedby="lenia-hint" tabindex="-1"></canvas>
+<span class="lenia-mark" aria-hidden="true">01 / BIOTA</span>
+</div>
+<figcaption class="lenia-caption">
+<div><a href="https://github.com/Chakazul/Lenia" class="lenia-name" title="Lenia by Bert Chan">ORBIUM UNICAUDATUS</a><span class="lenia-state"><i aria-hidden="true"></i><span data-status>STILL SPECIMEN</span></span></div>
+<div class="lenia-actions"><span id="lenia-hint" data-hint>Drag gently. Let go.</span><button type="button" data-pause disabled aria-label="Pause Lenia simulation">Pause</button><button type="button" data-reset disabled aria-label="Reset Lenia specimen">Reset ↺</button></div>
+</figcaption>
+<noscript><p class="lenia-note">Enable JavaScript to bring the specimen to life.</p></noscript>
+</figure>
+<script type="module" src="lenia/index.js"></script>`;
 }
 
-/* A plain-text nav that stands in for the DAG on narrow screens. */
+/* Plain section navigation is always available, with or without graphics. */
 function genusNav(depth) {
   const items = [
     ...site.genera.map(g => ({ label: g.label, href: u(depth, `index.html#${g.id}`) })),
@@ -427,7 +398,7 @@ function shell({ title, description, depth = 0, canonical, body }) {
 ${ORIGIN && canonical ? `<meta property="og:url" content="${ORIGIN}/${canonical}">
 <link rel="canonical" href="${ORIGIN}/${canonical}">` : ''}
 <link rel="icon" href="${u(depth, 'favicon.svg')}" type="image/svg+xml">
-<link rel="stylesheet" href="${u(depth, 'styles.css')}">${ORIGIN ? `
+<link rel="stylesheet" href="${u(depth, 'styles.css')}">${canonical === 'index.html' ? '\n<link rel="stylesheet" href="lenia/lenia.css">' : ''}${ORIGIN ? `
 <link rel="alternate" type="application/rss+xml" title="${esc(site.name)}" href="${u(depth, 'feed.xml')}">` : ''}
 </head>
 <body>
@@ -573,7 +544,7 @@ function markdown(src) {
 /* ----------------------------------------------------------- project pages */
 
 /* content/projects/<slug>.md — the hand-written half of a project page.
-   projects.js owns what the index and the DAG need; this file owns the page:
+   projects.js owns what the index and cross-filing need; this file owns the page:
    its prose, and the stats / media / links that appear nowhere else. Both
    halves are optional-friendly — a project with no page file falls back to
    rendering its `log` as FIELD NOTES. */
@@ -710,7 +681,7 @@ function buildIndex(posts) {
 <p class="about">${site.about}</p>
 ${genusNav(0)}
 </div>
-${dag(0)}
+${leniaMarkup()}
 </header>
 <main id="main">
 ${site.genera.map(genusSection).join('\n')}
@@ -1083,6 +1054,7 @@ async function serve() {
   const { spawn } = await import('node:child_process')
   const TYPES = {
     '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
+    '.js': 'text/javascript; charset=utf-8',
     '.svg': 'image/svg+xml', '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8',
     '.png': 'image/png', '.jpg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp',
     '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.json': 'application/json',

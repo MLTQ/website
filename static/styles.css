@@ -31,33 +31,16 @@ img{max-width:100%;height:auto;display:block}
 .skip:focus{left:0;color:var(--bg)}
 
 /* ------------------------------------------------------------- index header */
-.hdr{display:flex;justify-content:space-between;align-items:flex-start;
-  padding:48px var(--pad) 40px;gap:32px;flex-wrap:wrap}
+.hdr{display:grid;grid-template-columns:minmax(300px, .9fr) minmax(0,1.4fr);align-items:center;
+  padding:30px var(--pad) 34px;gap:24px;min-height:390px}
 .hdr h1{font-family:'Michroma',sans-serif;font-size:34px;margin:0}
 .hdr .sub{font-family:'Michroma',sans-serif;font-size:11px;letter-spacing:.26em;margin:8px 0 0}
 .hdr .about{font-size:11.5px;line-height:1.75;color:#4a4a4a;margin:26px 0 0;max-width:380px}
 
-/* text nav — stands in for the DAG on narrow screens, and is the only nav on
-   the pages that don't carry one */
+/* Plain section navigation remains available alongside the specimen. */
 .gnav{display:flex;flex-wrap:wrap;gap:6px 18px;padding:26px var(--pad) 6px;
   font-size:9.5px;letter-spacing:.2em}
-.hdr .gnav{padding-left:0;padding-right:0;display:none}
-
-/* --------------------------------------------------------------- DAG nav */
-.dag{position:relative;flex:none}
-.dag svg{position:absolute;left:0;top:0}
-.dag .dag-root{position:absolute;left:50%;top:16px;transform:translate(-50%,-50%);
-  background:var(--ink);color:var(--bg);font-family:'Michroma',sans-serif;
-  font-size:8px;letter-spacing:.14em;padding:4px 8px;white-space:nowrap}
-.dag a{position:absolute;transform:translate(-50%,-5px);display:flex;
-  flex-direction:column;align-items:center;gap:3px;white-space:nowrap}
-.dag a:hover{opacity:.6}
-.dag .cat-dot{width:10px;height:10px;background:var(--ink)}
-.dag .cat-lbl{font-size:7.5px;letter-spacing:.14em;color:var(--ink)}
-.dag .prj-dot{background:var(--peri);border-radius:50%}
-.dag .prj-lbl{font-size:7px;letter-spacing:.12em;color:var(--peri-dk)}
-.dag .legend{position:absolute;right:0;bottom:-10px;font-size:8px;
-  letter-spacing:.16em;color:var(--faint)}
+.hdr .gnav{padding:26px 0 0;display:flex;max-width:380px;gap:12px 17px;line-height:1.7}
 
 /* ------------------------------------------------------------ category bands */
 .band{padding:12px var(--pad);display:flex;justify-content:space-between;
@@ -203,8 +186,8 @@ figure.au img{margin-bottom:0}
 
 /* ------------------------------------------------------------- responsive */
 @media (max-width:900px){
-  .dag{display:none}
-  .hdr .gnav{display:flex}
+  .hdr{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px}
+  .hdr h1{font-size:26px}
 }
 @media (max-width:800px){
   :root{--pad:24px}
@@ -219,6 +202,11 @@ figure.au img{margin-bottom:0}
   .phdr{gap:24px;flex-wrap:wrap}
   .phdr h1{font-size:26px}
   .hdr h1{font-size:26px}
+}
+@media (max-width:650px){
+  .hdr{grid-template-columns:1fr;padding-top:36px;gap:6px}
+  .hdr .about{max-width:440px}
+  .hdr .gnav{max-width:none}
 }
 @media (max-width:520px){
   .phdr .g{transform:scale(.72);transform-origin:left top;margin-bottom:-30px}
