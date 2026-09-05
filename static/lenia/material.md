@@ -13,8 +13,11 @@ Raymarches the shared Lenia colony as small glass volumes. Each surface shifts f
 ## Contracts
 | Dependent | Expects | Breaking changes |
 |---|---|---|
-| `gpu.js` | Field and 32-byte uniform bindings | Bindings, uniform packing |
+| `gpu.js` | Field and 48-byte uniform bindings | Bindings, uniform packing |
 | `index.js` | Drag xy displacement and zw anchor in ground units | Interaction coordinates |
 
 ## Notes
 This is a density-derived 3D rendering of 2D Lenia, not the separate Lenia-3D project. Color uses cell state A, not growth rate or a biological health score. Reflections use an analytic studio environment; floor caustics are approximations. No remote textures or runtime dependencies.
+
+## Project specimens
+`createMaterialShader(habitat)` uses per-species display scale and a compact camera. The uniform is now 48 bytes: original eight floats plus center xy and two padding floats. Density samples relative to this smoothly tracked cell center; the homepage uses its unchanged fixed center. Display scaling does not resample the simulation.

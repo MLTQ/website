@@ -19,3 +19,6 @@ Styles the specimen as part of the archive header, with a seamless page ground a
 
 ## Notes
 Disabled controls are hidden in the no-JavaScript or unsupported-WebGPU view. Focus treatment is retained on interactive surfaces.
+
+## Project specimens
+`.phdr-specimen` replaces the old sigil row with a compact specimen column and the existing project title/summary. `.lenia-project` uses a 220px stage, species name/paper link, pause/reset, and petting hint. Phones center the 240px specimen above the text. The density-map fallback occupies the same reserved stage. Archive-list sigils are untouched.

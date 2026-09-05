@@ -32,6 +32,15 @@
 .lenia-note{font-size:11px;color:var(--mut)}
 .lenia-invitation{margin:0;font-size:10px;line-height:1.7;color:var(--mut)}
 .lenia-invitation a{text-decoration:underline;text-underline-offset:3px}
+.phdr-specimen{display:grid;grid-template-columns:minmax(210px,260px) minmax(0,1fr);align-items:center;gap:36px}
+.lenia-project{width:100%;align-self:start;justify-content:start}
+.lenia-project .lenia-stage{height:220px}
+.lenia-project .lenia-caption{gap:4px;padding-top:10px}
+.lenia-project .lenia-name{font-size:10px;letter-spacing:.05em;line-height:1.6}
+.lenia-project .lenia-state{font-size:8px;letter-spacing:.06em}
+.lenia-project-hint{font-size:9px;color:var(--faint)}
+.lenia-project .lenia-still{padding:14px 34px 36px;box-sizing:border-box}
+@media (max-width:650px){.phdr-specimen{grid-template-columns:minmax(0,1fr);gap:24px}.phdr-specimen>.lenia-project{width:240px;max-width:100%;margin:0 auto}.lenia-project .lenia-stage{height:210px}}
 @media (min-width:1250px){.lenia-stage{height:325px}}
 @media (max-width:900px){.lenia-stage{height:275px}.lenia-caption>div{gap:7px}.lenia-name{font-size:9px}}
 @media (max-width:650px){.lenia-stage{height:300px}.lenia{margin-top:12px}.lenia-mark{top:16px}.lenia-actions button,.lenia-reset{min-height:40px}.lenia-caption{padding-top:14px}}

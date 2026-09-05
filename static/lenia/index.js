@@ -1,10 +1,12 @@
 import { createGPU } from './gpu.js';
-import { WIDTH, HEIGHT, STEPS_PER_SECOND } from './colony.js';
+import { STEPS_PER_SECOND } from './colony.js';
 
 const root = document.querySelector('[data-lenia]');
 if (root) start(root);
 
 async function start(root) {
+  const speciesData = root.querySelector('[data-lenia-species]');
+  const species = speciesData ? JSON.parse(speciesData.textContent) : null;
   const canvas = root.querySelector('canvas');
   const status = root.querySelector('[data-status]');
   const pause = root.querySelector('[data-pause]');
@@ -40,8 +42,8 @@ async function start(root) {
     gpu?.destroy();
     console.warn('Lenia preview:', error);
   };
-  try { gpu = await createGPU(canvas, fail, { onPopulation: result => {
-    occupancy = result.respawned ? null : result.occupied / (WIDTH * HEIGHT) * 100;
+  try { gpu = await createGPU(canvas, fail, { species, onPopulation: result => {
+    occupancy = result.respawned ? null : result.occupied / (gpu.habitat.width * gpu.habitat.height) * 100;
     updateStatus();
     if (result.respawned) { drag.fill(0); velocity.fill(0); pointer = null; schedule(); }
   } }); } catch (error) { fail(error.message); return; }
@@ -56,7 +58,7 @@ async function start(root) {
   const draw = count => gpu.frame(count, age, drag);
   const resize = () => {
     const bounds = canvas.getBoundingClientRect();
-    const scale = Math.min(devicePixelRatio || 1, 1.5, 1050 / Math.max(bounds.width, 1));
+    const scale = Math.min(devicePixelRatio || 1, 1.5, (species ? 480 : 1050) / Math.max(bounds.width, 1));
     gpu.resize(bounds.width * scale, bounds.height * scale);
     draw(0);
   };
@@ -99,7 +101,7 @@ async function start(root) {
   });
   const groundPoint = event => {
     const rect = canvas.getBoundingClientRect();
-    const scale = Math.max(3.1, 5.4 / (rect.width / rect.height));
+    const scale = Math.max(gpu.habitat.viewScale, gpu.habitat.halfWidth / (rect.width / rect.height));
     const x = (2 * (event.clientX - rect.left) - rect.width) / rect.height;
     const y = (2 * (event.clientY - rect.top) - rect.height) / rect.height;
     return [x * scale, 0.33 + y * scale / 0.6717];

@@ -1,12 +1,14 @@
 import { WIDTH, HEIGHT, CELLS_PER_UNIT } from './colony.js';
 
 // A volumetric glass lens whose silhouette and thickness come from live cells.
-export const materialShader = /* wgsl */ `
+export const createMaterialShader = ({ width = WIDTH, height = HEIGHT, cellsPerUnit = CELLS_PER_UNIT, viewScale = 3.1, halfWidth = 5.4 } = {}) => /* wgsl */ `
 struct Uniforms {
   resolution: vec2f,
   time: f32,
   spare: f32,
   drag: vec4f,
+  center: vec2f,
+  padding: vec2f,
 };
 @group(0) @binding(0) var<storage, read> cells: array<f32>;
 @group(0) @binding(1) var<uniform> u: Uniforms;
@@ -17,12 +19,12 @@ struct Uniforms {
 }
 
 fn cell(p: vec2i) -> f32 {
-  let q = (p + vec2i(${WIDTH * 2}, ${HEIGHT * 2})) % vec2i(${WIDTH}, ${HEIGHT});
-  return cells[u32(q.y * ${WIDTH} + q.x)];
+  let q = (p + vec2i(${width * 2}, ${height * 2})) % vec2i(${width}, ${height});
+  return cells[u32(q.y * ${width} + q.x)];
 }
 fn density(p: vec2f) -> f32 {
-  if (any(abs(p) > vec2f(${WIDTH / (2 * CELLS_PER_UNIT)}, ${HEIGHT / (2 * CELLS_PER_UNIT)}))) { return 0.0; }
-  let q = p * ${CELLS_PER_UNIT}.0 + vec2f(${WIDTH / 2}.0, ${HEIGHT / 2}.0);
+  if (any(abs(p) > vec2f(${width / (2 * cellsPerUnit)}, ${height / (2 * cellsPerUnit)}))) { return 0.0; }
+  let q = p * ${cellsPerUnit.toFixed(8)} + u.center;
   let i = vec2i(floor(q));
   let f = fract(q);
   let x = vec4f(pow(1.0 - f.x, 3.0), 3.0*f.x*f.x*f.x - 6.0*f.x*f.x + 4.0,
@@ -84,7 +86,7 @@ fn floorHit(p: vec3f, d: vec3f) -> vec2f {
 
 @fragment fn fragment(@builtin(position) frag: vec4f) -> @location(0) vec4f {
   let uv = (frag.xy * 2.0 - u.resolution) / u.resolution.y;
-  let viewScale = max(3.1, 5.4 / (u.resolution.x / u.resolution.y));
+  let viewScale = max(${viewScale}, ${halfWidth} / (u.resolution.x / u.resolution.y));
   let forward = normalize(vec3f(0.0, -6.8, -7.5));
   let right = vec3f(1.0, 0.0, 0.0);
   let up = cross(right, forward);
@@ -155,3 +157,5 @@ fn floorHit(p: vec3f, d: vec3f) -> vec2f {
   return vec4f(clamp(color, vec3f(0.0), vec3f(1.0)), 1.0);
 }
 `;
+
+export const materialShader = createMaterialShader();

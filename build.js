@@ -6,7 +6,7 @@
        node build.js --serve    build, serve dist/ on :8000, rebuild on change
 
    Content and commit fields are rendered as HTML/CSS at build time. The
-   homepage alone progressively enhances its Lenia specimen with WebGPU.
+   homepage and project pages each enhance one Lenia surface with WebGPU.
    Every internal link is relative, so content works from file://, from a
    GitHub Pages subpath, or from a custom domain without reconfiguration. */
 
@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url'
 import { ensureSpectra, spectrumName } from './spectrogram.js'
 import site from './content/site.js'
 import projects from './content/projects.js'
+import { projectLeniaMarkup } from './project-lenia.js'
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url))
 const DIST = path.join(ROOT, 'dist')
@@ -401,7 +402,7 @@ function shell({ title, description, depth = 0, canonical, body }) {
 ${ORIGIN && canonical ? `<meta property="og:url" content="${ORIGIN}/${canonical}">
 <link rel="canonical" href="${ORIGIN}/${canonical}">` : ''}
 <link rel="icon" href="${u(depth, 'favicon.svg')}" type="image/svg+xml">
-<link rel="stylesheet" href="${u(depth, 'styles.css')}">${canonical === 'index.html' ? '\n<link rel="stylesheet" href="lenia/lenia.css">' : ''}${ORIGIN ? `
+<link rel="stylesheet" href="${u(depth, 'styles.css')}">${canonical === 'index.html' || canonical?.startsWith('projects/') ? `\n<link rel="stylesheet" href="${u(depth, 'lenia/lenia.css')}">` : ''}${ORIGIN ? `
 <link rel="alternate" type="application/rss+xml" title="${esc(site.name)}" href="${u(depth, 'feed.xml')}">` : ''}
 </head>
 <body>
@@ -761,8 +762,8 @@ function buildProject(p, posts, pages) {
 <a href="${u(1, 'index.html')}">← ${esc(site.name)} / INDEX</a>
 <span>${esc(p.status)}${p.mesh ? ' · ON THE MESH' : ''}</span>
 </div>
-<header class="phdr">
-${glyph(p, 110)}
+<header class="phdr phdr-specimen">
+${projectLeniaMarkup(p.slug)}
 <div>
 <h1 class="mh">${esc(p.name)}</h1>
 <p class="lede">${p.summary}</p>

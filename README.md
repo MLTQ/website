@@ -4,6 +4,7 @@ Personal showcase and field log. A static site built by a small Node script
 from a folder of plain content files. **No dependencies and no framework.** The archive content and commit fields
 are rendered at build time. The homepage progressively enhances its header
 with a WebGPU Lenia colony rendered as refractive green-to-purple jelly.
+Each project detail page has one distinct Lenia species in place of its header sigil.
 
 ```bash
 node build.js             # build once -> dist/
@@ -19,12 +20,14 @@ install.
 ```
 content/site.js         site metadata, genera, the CHRONICA log, the domain
 content/projects.js     the ledger — index rows, statuses and cross-filing
+content/lenia.js         permanent project-to-species assignments and original seeds
 content/projects/*.md   one page per system: its prose, stats and media
 content/posts/*.md      long-form writing (SCRIPTA)
 static/                 copied verbatim into dist/ (styles, favicon, media, Lenia)
 static/lenia/           isolated WebGPU simulation, glass renderer and still fallback
 tests/lenia.test.js     independent CPU longevity and locomotion check
 build.js                the generator
+project-lenia.js         single-specimen headers and seed-density fallbacks
 spectrogram.js          build-time FFT waterfalls for audio
 dist/                   output — generated, gitignored, never edited by hand
 ```
@@ -75,6 +78,25 @@ renderer (HTTPS or localhost is required by WebGPU). The isolated browser
 regression harness in `tests/browser.html` / `tests/browser.js` checks real GPU
 empty-field reseeding, a faint surviving cell, and reset/readback races; it is
 never included in the published output.
+
+## Project creatures
+
+All 26 projects have different, stable assignments from Bert Chan's original
+catalog. Only the selected species is embedded on each page, with one WebGPU
+canvas and a 96 × 96 simulation. Its original seed, polynomial growth parameters,
+and multi-ring kernel are preserved. A toroidal tracking camera follows its
+motion without modifying the cells. Reset and extinction restore one creature
+of that same species.
+
+Project drawing width is capped at 480 pixels, with the same 30 fps limit,
+offscreen suspension, reduced-motion support, and device cleanup as the homepage.
+Unsupported views display a density map of the assigned seed. Archive-list sigils
+remain in place until the later 2D identity pass. The assignments in
+`content/lenia.js` should be reused for that pass, and extended when adding projects.
+
+Run `npm run build` before `node --test tests/*.test.js`. The isolated
+`tests/species-browser.js` harness checks all species with actual GPU evolution,
+reset, and same-species extinction recovery; see its companion document for setup.
 
 ## Adding a system
 
